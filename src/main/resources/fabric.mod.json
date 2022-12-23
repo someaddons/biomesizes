@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "id": "smallbiomes",
+  "version": "${version}",
+
+  "name": "Small Biomes Mod",
+  "description": "Small Biomes decreases biome size",
+  "authors": [
+    "Someaddons"
+  ],
+  "contact": {
+    "homepage": "",
+    "sources": ""
+  },
+
+  "license": "ARR",
+  "icon": "assets/smallbiomes/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.smallbiomes.SmallBiomesMod"
+    ]
+  },
+  "mixins": [
+    "smallbiomes.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": "*",
+    "fabric": "*",
+    "minecraft": "1.18.x",
+    "java": ">=17"
+  },
+  "suggests": {
+    "another-mod": "*"
+  }
+}

@@ -25,7 +25,7 @@
   "mixins": [
     "smallbiomes.mixins.json"
   ],
-
+  "accessWidener": "smallbiomes.accessWidener",
   "depends": {
     "fabricloader": "*",
     "fabric": "*",

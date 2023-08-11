@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "id": "smallbiomes",
+  "id": "biomesize",
   "version": "${version}",
 
-  "name": "Small Biomes Mod",
-  "description": "Small Biomes decreases biome size",
+  "name": "Biome size Mod",
+  "description": "",
   "authors": [
     "Someaddons"
   ],
@@ -14,22 +14,23 @@
   },
 
   "license": "ARR",
-  "icon": "assets/smallbiomes/icon.png",
+  "icon": "assets/biomesize/icon.png",
 
   "environment": "*",
   "entrypoints": {
     "main": [
-      "com.smallbiomes.SmallBiomesMod"
+      "com.biomesize.BiomeSizeMod"
     ]
   },
   "mixins": [
-    "smallbiomes.mixins.json"
+    "biomesize.mixins.json"
   ],
-  "accessWidener": "smallbiomes.accessWidener",
+  "accessWidener": "biomesize.accessWidener",
   "depends": {
     "fabricloader": "*",
     "fabric": "*",
     "minecraft": "*",
+    "cupboard": "*",
     "java": ">=17"
   },
   "suggests": {

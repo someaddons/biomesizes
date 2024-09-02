@@ -24,7 +24,7 @@ public class BiomeSizeMod implements ModInitializer
     @Override
     public void onInitialize()
     {
-        adapted.put(new ResourceLocation("minecraft:worldgen/noise/temperature.json"), 0);
-        adapted.put(new ResourceLocation("minecraft:worldgen/noise/vegetation.json"), 0);
+        adapted.put(ResourceLocation.withDefaultNamespace("temperature"), 0);
+        adapted.put(ResourceLocation.withDefaultNamespace("vegetation"), 0);
     }
 }

@@ -31,7 +31,7 @@
     "fabric": "*",
     "minecraft": "*",
     "cupboard": "*",
-    "java": ">=17"
+    "java": ">=21"
   },
   "suggests": {
     "another-mod": "*"

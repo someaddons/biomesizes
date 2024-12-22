@@ -14,7 +14,7 @@ public class CommonConfiguration implements ICommonConfig {
         final JsonObject root = new JsonObject();
 
         final JsonObject entry = new JsonObject();
-        entry.addProperty("desc:", "Biome size modifier, added to the vanilla biome size. Vanilla value:0, min = -8 max = 8 : default:-2");
+        entry.addProperty("desc:", "Biome size modifier, added to the vanilla biome size. Vanilla value:0, recommended range: [-8;8]: default:-2");
         entry.addProperty("biomeSizeModifier", biomeSizeModifier);
         root.add("biomeSizeModifier", entry);
 

@@ -46,7 +46,7 @@ public class RegistryDataLoaderMixin
         {
             if (jsonElement instanceof JsonObject)
             {
-                ((JsonObject) jsonElement).addProperty("firstOctave", Math.max(-14, Math.min(-2, ((JsonObject) jsonElement).get("firstOctave").getAsInt() - BiomeSizeMod.config.getCommonConfig().biomeSizeModifier)));
+                ((JsonObject) jsonElement).addProperty("firstOctave", ((JsonObject) jsonElement).get("firstOctave").getAsInt() - BiomeSizeMod.config.getCommonConfig().biomeSizeModifier);
             }
         }
     }

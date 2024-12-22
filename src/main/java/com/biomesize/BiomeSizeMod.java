@@ -3,7 +3,9 @@ package com.biomesize;
 import com.biomesize.config.CommonConfiguration;
 import com.cupboard.config.CupboardConfig;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.common.Mod;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -24,9 +26,9 @@ public class BiomeSizeMod
     public static Map<ResourceLocation, Integer>      adapted = new HashMap<>();
     public static CupboardConfig<CommonConfiguration> config  = new CupboardConfig<>(MODID, new CommonConfiguration());
 
-    public BiomeSizeMod()
+    public BiomeSizeMod(IEventBus modEventBus, ModContainer modContainer)
     {
-        adapted.put(new ResourceLocation("minecraft:worldgen/noise/temperature.json"), 0);
-        adapted.put(new ResourceLocation("minecraft:worldgen/noise/vegetation.json"), 0);
+        adapted.put(ResourceLocation.withDefaultNamespace("temperature"), 0);
+        adapted.put(ResourceLocation.withDefaultNamespace("vegetation"), 0);
     }
 }

@@ -18,6 +18,8 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.io.Reader;
 
+import static com.biomesize.BiomeSizeMod.adjustJsonData;
+
 @Mixin(RegistryDataLoader.class)
 public class RegistryDataLoaderMixin
 {
@@ -33,11 +35,28 @@ public class RegistryDataLoaderMixin
         final Reader reader,
         final JsonElement jsonElement)
     {
-        if (BiomeSizeMod.adapted.containsKey(resourceKey.location()))
+        if (BiomeSizeMod.config.getCommonConfig().legacyMode)
         {
-            if (jsonElement instanceof JsonObject)
+            if (BiomeSizeMod.adapted.containsKey(resourceKey.location()))
             {
-                ((JsonObject) jsonElement).addProperty("firstOctave", ((JsonObject) jsonElement).get("firstOctave").getAsInt() - BiomeSizeMod.config.getCommonConfig().biomeSizeModifier);
+                if (jsonElement instanceof JsonObject)
+                {
+                    ((JsonObject) jsonElement).addProperty("firstOctave", ((JsonObject) jsonElement).get("firstOctave").getAsInt() - BiomeSizeMod.config.getCommonConfig().biomeSizeModifier);
+                }
+            }
+
+            return;
+        }
+
+        if (resourceKey.toString().contains("worldgen/noise_settings"))
+        {
+            try
+            {
+                adjustJsonData(jsonElement, resourceKey.location());
+            }
+            catch (Exception e)
+            {
+                BiomeSizeMod.LOGGER.error("Failed to adjust:"+resourceKey.location()+" data:"+jsonElement, e);
             }
         }
     }

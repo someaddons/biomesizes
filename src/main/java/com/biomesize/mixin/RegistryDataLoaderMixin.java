@@ -1,9 +1,9 @@
 package com.biomesize.mixin;
 
+import com.biomesize.BiomeSizeMod;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.serialization.Decoder;
-import com.biomesize.BiomeSizeMod;
 import net.minecraft.core.Registry;
 import net.minecraft.core.WritableRegistry;
 import net.minecraft.resources.*;
@@ -19,34 +19,54 @@ import java.io.Reader;
 import java.util.Iterator;
 import java.util.Map;
 
+import static com.biomesize.BiomeSizeMod.adjustJsonData;
+
 @Mixin(RegistryDataLoader.class)
 public class RegistryDataLoaderMixin
 {
     @Inject(method = "loadRegistryContents", at = @At(value = "INVOKE", target = "Lcom/mojang/serialization/Decoder;parse(Lcom/mojang/serialization/DynamicOps;Ljava/lang/Object;)Lcom/mojang/serialization/DataResult;", remap = false), locals = LocalCapture.CAPTURE_FAILEXCEPTION)
-    private  static <E> void onLoad(
-      final RegistryOps.RegistryInfoLookup registryInfoLookup,
-      final ResourceManager resourceManager,
-      final ResourceKey<? extends Registry<E>> resourceKey,
-      final WritableRegistry<E> writableRegistry,
-      final Decoder<E> decoder,
-      final Map<ResourceKey<?>, Exception> map,
-      final CallbackInfo ci,
-      final String string,
-      final FileToIdConverter fileToIdConverter,
-      final RegistryOps registryOps,
-      final Iterator var9,
-      final Map.Entry entry,
-      final ResourceLocation resourceLocation,
-      final ResourceKey resourceKey2,
-      final Resource resource,
-      final Reader reader,
-      final JsonElement jsonElement)
+    private static <E> void onLoad(
+        final RegistryOps.RegistryInfoLookup registryInfoLookup,
+        final ResourceManager resourceManager,
+        final ResourceKey<? extends Registry<E>> resourceKey,
+        final WritableRegistry<E> writableRegistry,
+        final Decoder<E> decoder,
+        final Map<ResourceKey<?>, Exception> map,
+        final CallbackInfo ci,
+        final String string,
+        final FileToIdConverter fileToIdConverter,
+        final RegistryOps registryOps,
+        final Iterator var9,
+        final Map.Entry entry,
+        final ResourceLocation resourceLocation,
+        final ResourceKey resourceKey2,
+        final Resource resource,
+        final Reader reader,
+        final JsonElement jsonElement)
     {
-        if (BiomeSizeMod.adapted.containsKey(resourceLocation))
+        if (BiomeSizeMod.config.getCommonConfig().legacyMode)
         {
-            if (jsonElement instanceof JsonObject)
+            if (BiomeSizeMod.adapted.containsKey(resourceLocation))
             {
-                ((JsonObject) jsonElement).addProperty("firstOctave", ((JsonObject) jsonElement).get("firstOctave").getAsInt() - BiomeSizeMod.config.getCommonConfig().biomeSizeModifier);
+                if (jsonElement instanceof JsonObject)
+                {
+                    ((JsonObject) jsonElement).addProperty("firstOctave",
+                        ((JsonObject) jsonElement).get("firstOctave").getAsInt() - BiomeSizeMod.config.getCommonConfig().biomeSizeModifier);
+                }
+            }
+
+            return;
+        }
+
+        if (resourceKey.location().getPath().contains("worldgen/noise_settings"))
+        {
+            try
+            {
+                adjustJsonData(jsonElement, resourceLocation);
+            }
+            catch (Exception e)
+            {
+                BiomeSizeMod.LOGGER.error("Failed to adjust:"+resourceLocation+" data:"+jsonElement, e);
             }
         }
     }

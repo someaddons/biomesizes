@@ -27,7 +27,7 @@
   ],
   "accessWidener": "biomesize.accessWidener",
   "depends": {
-    "cupboard": "*",
+    "cupboard": "*"
   },
   "suggests": {
     "another-mod": "*"

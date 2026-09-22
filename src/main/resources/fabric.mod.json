@@ -27,11 +27,7 @@
   ],
   "accessWidener": "biomesize.accessWidener",
   "depends": {
-    "fabricloader": "*",
-    "fabric": "*",
-    "minecraft": "*",
     "cupboard": "*",
-    "java": ">=21"
   },
   "suggests": {
     "another-mod": "*"

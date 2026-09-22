@@ -3,10 +3,12 @@ package com.biomesize.mixin;
 import com.biomesize.BiomeSizeMod;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Decoder;
 import net.minecraft.core.RegistrationInfo;
 import net.minecraft.core.WritableRegistry;
 import net.minecraft.resources.RegistryDataLoader;
+import net.minecraft.resources.RegistryLoadTask;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.packs.resources.Resource;
@@ -14,35 +16,34 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.io.Reader;
 
 import static com.biomesize.BiomeSizeMod.adjustJsonData;
 
-@Mixin(RegistryDataLoader.class)
+@Mixin(RegistryLoadTask.PendingRegistration.class)
 public class RegistryDataLoaderMixin
 {
-    @Inject(method = "loadElementFromResource", at = @At(value = "INVOKE", target = "Lcom/mojang/serialization/Decoder;parse(Lcom/mojang/serialization/DynamicOps;Ljava/lang/Object;)Lcom/mojang/serialization/DataResult;", remap = false), locals = LocalCapture.CAPTURE_FAILEXCEPTION)
+    @Inject(method = "loadFromResource", at = @At(value = "INVOKE", target = "Lnet/neoforged/neoforge/common/conditions/ConditionalOps;createConditionalCodec(Lcom/mojang/serialization/Codec;)Lcom/mojang/serialization/Codec;"), locals = LocalCapture.CAPTURE_FAILEXCEPTION)
     private static <E> void onLoad(
-      final WritableRegistry<E> p_326195_,
-      final Decoder<E> otherdecoder,
-      final RegistryOps<JsonElement> p_325932_,
-      final ResourceKey<E> resourceKey,
-      final Resource p_326141_,
-      final RegistrationInfo p_326033_,
-      final CallbackInfo ci,
-      final Decoder decoder,
-      final Reader reader,
-      final JsonElement jsonElement)
+        final Decoder elementDecoder,
+        final RegistryOps<JsonElement> ops,
+        final ResourceKey resourceKey,
+        final Resource thunk,
+        final CallbackInfoReturnable<Either<Object, Exception>> cir,
+        final Reader reader,
+        final JsonElement jsonElement)
     {
         if (BiomeSizeMod.config.getCommonConfig().legacyMode)
         {
-            if (BiomeSizeMod.adapted.containsKey(resourceKey.location()))
+            if (BiomeSizeMod.adapted.containsKey(resourceKey.identifier()))
             {
                 if (jsonElement instanceof JsonObject)
                 {
-                    ((JsonObject) jsonElement).addProperty("firstOctave", ((JsonObject) jsonElement).get("firstOctave").getAsInt() - BiomeSizeMod.config.getCommonConfig().biomeSizeModifier);
+                    ((JsonObject) jsonElement).addProperty("firstOctave",
+                        ((JsonObject) jsonElement).get("firstOctave").getAsInt() - BiomeSizeMod.config.getCommonConfig().biomeSizeModifier);
                 }
             }
 
@@ -53,11 +54,11 @@ public class RegistryDataLoaderMixin
         {
             try
             {
-                adjustJsonData(jsonElement, resourceKey.location());
+                adjustJsonData(jsonElement, resourceKey.identifier());
             }
             catch (Exception e)
             {
-                BiomeSizeMod.LOGGER.error("Failed to adjust:"+resourceKey.location()+" data:"+jsonElement, e);
+                BiomeSizeMod.LOGGER.error("Failed to adjust:" + resourceKey.identifier() + " data:" + jsonElement, e);
             }
         }
     }

@@ -4,7 +4,7 @@ import com.biomesize.config.CommonConfiguration;
 import com.cupboard.config.CupboardConfig;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
@@ -31,16 +31,16 @@ public class BiomeSizeMod
     public static final String NOISE           = "noise";
     public static final String SIZE_HORIZONTAL = "size_horizontal";
 
-    public static Map<ResourceLocation, Integer>      adapted = new HashMap<>();
+    public static Map<Identifier, Integer>      adapted = new HashMap<>();
     public static CupboardConfig<CommonConfiguration> config  = new CupboardConfig<>(MODID, new CommonConfiguration());
 
     public BiomeSizeMod(IEventBus modEventBus, ModContainer modContainer)
     {
-        adapted.put(ResourceLocation.withDefaultNamespace("temperature"), 0);
-        adapted.put(ResourceLocation.withDefaultNamespace("vegetation"), 0);
+        adapted.put(Identifier.withDefaultNamespace("temperature"), 0);
+        adapted.put(Identifier.withDefaultNamespace("vegetation"), 0);
     }
 
-    public static void adjustJsonData(final JsonElement jsonElement, final ResourceLocation id)
+    public static void adjustJsonData(final JsonElement jsonElement, final Identifier id)
     {
         if (jsonElement instanceof JsonObject fileJson)
         {
